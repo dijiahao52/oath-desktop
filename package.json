@@ -1,0 +1,61 @@
+{
+  "name": "oath-desktop",
+  "version": "0.1.0",
+  "description": "Oath Desktop — heyoath.com 的桌面客户端",
+  "main": "main.js",
+  "author": "Oath",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "env -u ELECTRON_RUN_AS_NODE electron .",
+    "pack": "env -u ELECTRON_RUN_AS_NODE electron-builder --dir",
+    "dist": "env -u ELECTRON_RUN_AS_NODE electron-builder",
+    "dist:mac": "env -u ELECTRON_RUN_AS_NODE electron-builder --mac",
+    "dist:mac:arm64": "env -u ELECTRON_RUN_AS_NODE electron-builder --mac --arm64",
+    "dist:win": "env -u ELECTRON_RUN_AS_NODE electron-builder --win",
+    "dist:all": "env -u ELECTRON_RUN_AS_NODE electron-builder -mwl"
+  },
+  "build": {
+    "appId": "com.heyoath.desktop",
+    "productName": "Oath",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "menu.js",
+      "package.json"
+    ],
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "target": [
+        { "target": "dmg", "arch": ["arm64"] }
+      ],
+      "icon": "build/icon.icns",
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false,
+      "identity": null
+    },
+    "dmg": {
+      "title": "Oath",
+      "icon": "build/icon.icns"
+    },
+    "win": {
+      "target": [
+        { "target": "nsis", "arch": ["x64"] }
+      ],
+      "icon": "build/icon.ico"
+    },
+    "linux": {
+      "target": ["AppImage"],
+      "icon": "build/icon.png",
+      "category": "Development"
+    }
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.1.8"
+  }
+}
