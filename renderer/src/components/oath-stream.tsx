@@ -39,6 +39,10 @@ export function OathStream({
         defaultExpanded={defaultThinkingExpanded}
       />
 
+      {state.narrator_response && (
+        <NarratorBlock content={state.narrator_response} />
+      )}
+
       {state.files.length > 0 && <OutputBlock files={state.files} />}
 
       {state.status === "done" && state.final_verdict && (
@@ -274,6 +278,15 @@ function useElapsedSeconds(state: RunState): number {
   }, [isRunning])
 
   return elapsed
+}
+
+// ─── Narrator (conversational summary) ──────────────────────────
+function NarratorBlock({ content }: { content: string }) {
+  return (
+    <div className="font-sans text-[15px] text-parch leading-[1.7] whitespace-pre-wrap break-words">
+      {content}
+    </div>
+  )
 }
 
 // ─── Output (final answer) ───────────────────────────────────────

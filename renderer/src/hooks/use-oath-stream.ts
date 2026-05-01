@@ -36,6 +36,7 @@ const initialState = (): RunState => ({
   files: [],
   final_verdict: null,
   error: null,
+  narrator_response: null,
 })
 
 export function useOathStream() {
@@ -184,6 +185,9 @@ function applyEvent(prev: RunState, ev: OathEvent): RunState {
         final_verdict: ev.data.final_verdict,
         total_iterations: ev.data.total_iterations,
       }
+
+    case "narrator_complete":
+      return { ...prev, narrator_response: ev.data.content }
 
     case "error":
       return {

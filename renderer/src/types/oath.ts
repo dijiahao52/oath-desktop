@@ -59,11 +59,17 @@ export interface ErrorEvent {
   message: string
 }
 
+export interface NarratorCompleteEvent {
+  iteration: number
+  content: string
+}
+
 export type OathEvent =
   | { type: "started"; data: StartedEvent }
   | { type: "layer_complete"; data: LayerCompleteEvent }
   | { type: "files_extracted"; data: FilesExtractedEvent }
   | { type: "rework_triggered"; data: ReworkTriggeredEvent }
+  | { type: "narrator_complete"; data: NarratorCompleteEvent }
   | { type: "done"; data: DoneEvent }
   | { type: "error"; data: ErrorEvent }
 
@@ -91,6 +97,7 @@ export interface RunState {
   files: ParsedFile[]
   final_verdict: FinalVerdict | null
   error: string | null
+  narrator_response: string | null
 }
 
 export const LAYER_ORDER: LayerId[] = [
