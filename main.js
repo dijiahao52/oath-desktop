@@ -1,7 +1,12 @@
 /**
  * main.js — Oath Desktop
  *
- * 加载 https://heyoath.com 的桌面壳子。
+ * Loads the bundled renderer (renderer/dist/index.html) in production,
+ * or the Vite dev server (localhost:5173) in development.
+ *
+ * Set `OATH_URL=https://heyoath.com/build` to fall back to the legacy
+ * "load remote URL" mode (useful for testing the web build inside the shell).
+ *
  * 体验对齐 Claude Desktop:
  *  - macOS 经典 hiddenInset 标题栏
  *  - 1200×800 默认窗口、记住上次大小/位置
@@ -14,7 +19,28 @@ const path = require("path");
 const fs = require("fs");
 const { buildMenu } = require("./menu");
 
-const APP_URL = process.env.OATH_URL || "https://heyoath.com/build";
+// ── Load target ────────────────────────────────────────────────────
+// Priority:
+//   1. OATH_URL env var (explicit override — load any URL)
+//   2. dev mode (not packaged)  → http://localhost:5173 (Vite dev server)
+//   3. production               → renderer/dist/index.html (bundled)
+const REMOTE_URL_OVERRIDE = process.env.OATH_URL || "";
+const DEV_RENDERER_URL = "http://localhost:5173";
+const PROD_RENDERER_FILE = path.join(__dirname, "renderer", "dist", "index.html");
+
+function isDev() {
+  return !app.isPackaged;
+}
+
+function loadAppContent(window) {
+  if (REMOTE_URL_OVERRIDE) {
+    return window.loadURL(REMOTE_URL_OVERRIDE);
+  }
+  if (isDev()) {
+    return window.loadURL(DEV_RENDERER_URL);
+  }
+  return window.loadFile(PROD_RENDERER_FILE);
+}
 
 // ── 简易窗口状态持久化 ─────────────────────────────────────────────
 // stateFile 必须懒求值: app.getPath() 在 app.whenReady() 之前不可用
@@ -62,7 +88,7 @@ function createWindow() {
     },
   });
 
-  mainWindow.loadURL(APP_URL);
+  loadAppContent(mainWindow);
 
   mainWindow.once("ready-to-show", () => mainWindow.show());
 
@@ -72,12 +98,13 @@ function createWindow() {
     return { action: "deny" };
   });
 
-  // 站外导航也丢给系统浏览器
+  // 任何跨 origin 的导航都丢给系统浏览器，
+  // 同 origin 的（含 file:// 内部跳转）允许
   mainWindow.webContents.on("will-navigate", (event, url) => {
     try {
       const target = new URL(url);
-      const allowed = new URL(APP_URL);
-      if (target.host !== allowed.host) {
+      const current = new URL(mainWindow.webContents.getURL());
+      if (target.origin !== current.origin) {
         event.preventDefault();
         shell.openExternal(url);
       }
@@ -101,7 +128,10 @@ app.whenReady().then(() => {
   session.defaultSession.setPermissionRequestHandler((_w, _p, cb) => cb(false));
 
   createWindow();
-  buildMenu({ getWindow: () => mainWindow, appUrl: APP_URL });
+  buildMenu({
+    getWindow: () => mainWindow,
+    reload: () => mainWindow && loadAppContent(mainWindow),
+  });
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();

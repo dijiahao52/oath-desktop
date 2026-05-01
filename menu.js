@@ -4,7 +4,7 @@
  */
 const { app, Menu, shell } = require("electron");
 
-function buildMenu({ getWindow, appUrl }) {
+function buildMenu({ getWindow, reload }) {
   const isMac = process.platform === "darwin";
 
   const template = [
@@ -34,8 +34,8 @@ function buildMenu({ getWindow, appUrl }) {
           label: "New Window",
           accelerator: "CmdOrCtrl+N",
           click: () => {
-            const win = getWindow();
-            if (win) win.webContents.loadURL(appUrl);
+            // Re-load app content (dev URL or bundled renderer) into current window.
+            if (typeof reload === "function") reload();
           },
         },
         isMac ? { role: "close" } : { role: "quit" },
@@ -98,7 +98,7 @@ function buildMenu({ getWindow, appUrl }) {
       submenu: [
         {
           label: "Open heyoath.com",
-          click: () => shell.openExternal(appUrl),
+          click: () => shell.openExternal("https://heyoath.com"),
         },
       ],
     },

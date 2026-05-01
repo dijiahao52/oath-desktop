@@ -1,6 +1,10 @@
-*.log
-.DS_Store
-build/icon.iconset/
-dist/
 node_modules/
 release/
+dist/
+.DS_Store
+*.log
+
+# renderer (Vite + React app)
+renderer/node_modules/
+renderer/dist/
+renderer/*.tsbuildinfo

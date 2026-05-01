@@ -7,13 +7,19 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "install:all": "npm install && cd renderer && npm install",
+    "dev": "concurrently -k -n vite,electron -c blue,magenta \"npm:dev:renderer\" \"npm:dev:electron\"",
+    "dev:renderer": "cd renderer && npm run dev",
+    "dev:electron": "wait-on tcp:5173 && env -u ELECTRON_RUN_AS_NODE electron .",
+    "build:renderer": "cd renderer && npm run build",
     "start": "env -u ELECTRON_RUN_AS_NODE electron .",
-    "pack": "env -u ELECTRON_RUN_AS_NODE electron-builder --dir",
-    "dist": "env -u ELECTRON_RUN_AS_NODE electron-builder",
-    "dist:mac": "env -u ELECTRON_RUN_AS_NODE electron-builder --mac",
-    "dist:mac:arm64": "env -u ELECTRON_RUN_AS_NODE electron-builder --mac --arm64",
-    "dist:win": "env -u ELECTRON_RUN_AS_NODE electron-builder --win",
-    "dist:all": "env -u ELECTRON_RUN_AS_NODE electron-builder -mwl"
+    "start:remote": "OATH_URL=https://heyoath.com/build env -u ELECTRON_RUN_AS_NODE electron .",
+    "pack": "npm run build:renderer && env -u ELECTRON_RUN_AS_NODE electron-builder --dir",
+    "dist": "npm run build:renderer && env -u ELECTRON_RUN_AS_NODE electron-builder",
+    "dist:mac": "npm run build:renderer && env -u ELECTRON_RUN_AS_NODE electron-builder --mac",
+    "dist:mac:arm64": "npm run build:renderer && env -u ELECTRON_RUN_AS_NODE electron-builder --mac --arm64",
+    "dist:win": "npm run build:renderer && env -u ELECTRON_RUN_AS_NODE electron-builder --win",
+    "dist:all": "npm run build:renderer && env -u ELECTRON_RUN_AS_NODE electron-builder -mwl"
   },
   "build": {
     "appId": "com.heyoath.desktop",
@@ -26,7 +32,8 @@
       "main.js",
       "preload.js",
       "menu.js",
-      "package.json"
+      "package.json",
+      "renderer/dist/**/*"
     ],
     "mac": {
       "category": "public.app-category.developer-tools",
@@ -55,7 +62,9 @@
     }
   },
   "devDependencies": {
+    "concurrently": "^9.0.0",
     "electron": "^33.0.0",
-    "electron-builder": "^25.1.8"
+    "electron-builder": "^25.1.8",
+    "wait-on": "^8.0.0"
   }
 }
