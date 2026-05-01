@@ -34,8 +34,19 @@ export default function App() {
   const [fileContext, setFileContext] = useState<{ name: string; content: string } | null>(null)
   const [models, setModels] = useState<ModelConfig[]>(() => loadModels())
   const [activeModelId, setActiveModelId] = useState<string>(() => loadActiveModelId())
+  const [darkMode, setDarkMode] = useState<boolean>(
+    () => localStorage.getItem("oath:theme") !== "light"
+  )
   const { state, start, reset } = useOathStream()
   const feedRef = useRef<HTMLDivElement>(null)
+
+  const toggleTheme = () => {
+    setDarkMode((prev) => {
+      const next = !prev
+      localStorage.setItem("oath:theme", next ? "dark" : "light")
+      return next
+    })
+  }
 
   useEffect(() => {
     setHistory(loadRuns())
@@ -186,7 +197,7 @@ export default function App() {
   }
 
   return (
-    <main className="theme-linen h-screen bg-background flex flex-col overflow-hidden">
+    <main className={`${darkMode ? "" : "theme-light"} h-screen bg-background flex flex-col overflow-hidden`}>
       {/* ── Desktop top bar ── */}
       <div className="hidden md:flex items-center justify-between px-4 py-2 border-b border-rule bg-background/80 backdrop-blur-sm shrink-0">
         <span className="font-serif text-sm text-parch-2 tracking-wide">oath</span>
@@ -202,6 +213,34 @@ export default function App() {
             onSelect={handleSelectModel}
             onAddModel={handleAddModel}
           />
+          {/* Theme toggle */}
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+            title={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+            className="p-1.5 rounded-lg text-parch-2 hover:text-parch hover:bg-rule/40 transition-colors"
+          >
+            {darkMode ? (
+              /* Sun icon */
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="5" />
+                <line x1="12" y1="1" x2="12" y2="3" />
+                <line x1="12" y1="21" x2="12" y2="23" />
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                <line x1="1" y1="12" x2="3" y2="12" />
+                <line x1="21" y1="12" x2="23" y2="12" />
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+              </svg>
+            ) : (
+              /* Moon icon */
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+              </svg>
+            )}
+          </button>
         </div>
       </div>
 

@@ -1,41 +1,40 @@
 @import "tailwindcss";
 
-/* ─── Theme tokens (mirrors heyoath.com's globals.css) ────────── */
+/* ─── Dark theme (default) — Claude-inspired ─────────────────── */
 :root {
-  --background: #0A0A0A;
-  --foreground: #E8DFD0;
-  --card: #141414;
-  --card-foreground: #E8DFD0;
-  --popover: #141414;
-  --popover-foreground: #E8DFD0;
-  --primary: #E8DFD0;
-  --primary-foreground: #0A0A0A;
-  --secondary: #141414;
-  --secondary-foreground: #E8DFD0;
-  --muted: #141414;
-  --muted-foreground: #9A9285;
+  --background: #212121;
+  --foreground: #ececec;
+  --card: #2d2d2d;
+  --card-foreground: #ececec;
+  --popover: #2d2d2d;
+  --popover-foreground: #ececec;
+  --primary: #ececec;
+  --primary-foreground: #212121;
+  --secondary: #2d2d2d;
+  --secondary-foreground: #ececec;
+  --muted: #2d2d2d;
+  --muted-foreground: #8e8ea0;
   --accent: #D4A574;
-  --accent-foreground: #0A0A0A;
-  --destructive: #DC2626;
-  --destructive-foreground: #FAF0E6;
-  --border: #2A2520;
-  --input: #2A2520;
+  --accent-foreground: #212121;
+  --destructive: #ef4444;
+  --destructive-foreground: #ececec;
+  --border: #3d3d3d;
+  --input: #2d2d2d;
   --ring: #D4A574;
-  --radius: 0.5rem;
+  --radius: 0.75rem;
 
-  /* Brand tokens */
-  --ink:    #0A0A0A;
-  --ink-2:  #141414;
-  --parch:  #E8DFD0;
-  --parch-2:#9A9285;
+  --ink:    #212121;
+  --ink-2:  #2d2d2d;
+  --parch:  #ececec;
+  --parch-2:#8e8ea0;
   --gold:   #D4A574;
   --gold-2: #8B6F47;
-  --rule:   #2A2520;
+  --rule:   #3d3d3d;
 }
 
 @theme inline {
   --font-serif: 'Cormorant Garamond', Georgia, serif;
-  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -69,49 +68,71 @@
 }
 
 @layer base {
+  * {
+    transition-property: background-color, border-color, color;
+    transition-duration: 150ms;
+    transition-timing-function: ease;
+  }
+
   body {
     background-color: var(--background);
     color: var(--foreground);
-    font-family: var(--font-mono);
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+                 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
   }
+
   ::selection {
-    background: #D4A574;
-    color: #0A0A0A;
+    background-color: var(--gold);
+    color: var(--ink);
   }
+
+  /* Thin, Claude-like scrollbars */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: var(--rule);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--parch-2); }
 }
 
-/* Linen (light) theme — scoped via .theme-linen on a parent element */
-.theme-linen {
-  --background: #FAF0E6;
-  --foreground: #2A2520;
-  --card: #F5EAD9;
-  --card-foreground: #2A2520;
-  --popover: #F5EAD9;
-  --popover-foreground: #2A2520;
-  --primary: #2A2520;
-  --primary-foreground: #FAF0E6;
-  --secondary: #F5EAD9;
-  --secondary-foreground: #2A2520;
-  --muted: #F5EAD9;
-  --muted-foreground: #6B5F4F;
-  --accent: #A87530;
-  --accent-foreground: #FAF0E6;
-  --border: #D6C9B5;
-  --input: #D6C9B5;
-  --ring: #A87530;
+/* ─── Light theme — Claude-inspired clean white ────────────────── */
+.theme-light {
+  --background: #ffffff;
+  --foreground: #0d0d0d;
+  --card: #f7f7f8;
+  --card-foreground: #0d0d0d;
+  --popover: #ffffff;
+  --popover-foreground: #0d0d0d;
+  --primary: #0d0d0d;
+  --primary-foreground: #ffffff;
+  --secondary: #f7f7f8;
+  --secondary-foreground: #0d0d0d;
+  --muted: #f7f7f8;
+  --muted-foreground: #6e6e80;
+  --accent: #c96d2c;
+  --accent-foreground: #ffffff;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --border: #e5e7eb;
+  --input: #f7f7f8;
+  --ring: #c96d2c;
 
-  --ink:    #FAF0E6;
-  --ink-2:  #F5EAD9;
-  --parch:  #2A2520;
-  --parch-2:#6B5F4F;
-  --gold:   #A87530;
-  --gold-2: #8B6F47;
-  --rule:   #D6C9B5;
+  --ink:    #ffffff;
+  --ink-2:  #f7f7f8;
+  --parch:  #0d0d0d;
+  --parch-2:#6e6e80;
+  --gold:   #c96d2c;
+  --gold-2: #9a4e1a;
+  --rule:   #e5e7eb;
 }
 
-.theme-linen ::selection {
-  background: #A87530;
-  color: #FAF0E6;
+.theme-light ::selection {
+  background-color: var(--gold);
+  color: #ffffff;
 }
 
 .tracking-tight-custom {

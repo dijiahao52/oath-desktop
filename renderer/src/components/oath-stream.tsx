@@ -10,15 +10,14 @@ import {
 } from "@/types/oath"
 
 // ─── Per-layer accent colors ─────────────────────────────────────
-// Distinguishable on linen (#FAF0E6) bg; avoids collision with
-// PASS=emerald and FAIL=red verdict colors.
+// Uses mid-range shades that work on both dark and light backgrounds.
 const LAYER_ACCENT: Record<LayerId, { text: string; dot: string }> = {
-  board:       { text: "text-blue-700",   dot: "bg-blue-500"   },
-  management:  { text: "text-violet-700", dot: "bg-violet-500" },
-  execution:   { text: "text-teal-700",   dot: "bg-teal-500"   },
-  supervision: { text: "text-amber-700",  dot: "bg-amber-500"  },
-  audit:       { text: "text-rose-700",   dot: "bg-rose-500"   },
-  rework:      { text: "text-orange-700", dot: "bg-orange-500" },
+  board:       { text: "text-blue-400",   dot: "bg-blue-400"   },
+  management:  { text: "text-violet-400", dot: "bg-violet-400" },
+  execution:   { text: "text-teal-400",   dot: "bg-teal-400"   },
+  supervision: { text: "text-amber-400",  dot: "bg-amber-400"  },
+  audit:       { text: "text-rose-400",   dot: "bg-rose-400"   },
+  rework:      { text: "text-orange-400", dot: "bg-orange-400" },
 }
 
 interface OathStreamProps {
@@ -67,8 +66,8 @@ export function OathStream({
 function UserMessage({ command }: { command: string }) {
   return (
     <div className="flex justify-end">
-      <div className="max-w-[85%] bg-ink-2 border border-rule rounded-2xl rounded-br-sm px-4 py-3">
-        <p className="font-mono text-sm text-parch break-words whitespace-pre-wrap">
+      <div className="max-w-[85%] bg-rule/50 rounded-2xl rounded-br-sm px-4 py-3">
+        <p className="text-sm text-parch break-words whitespace-pre-wrap">
           {command || "..."}
         </p>
       </div>
@@ -195,10 +194,10 @@ function ThinkingSectionView({
           <span className="text-gold">· iter {section.iteration}</span>
         )}
         {section.verdict === "PASS" && (
-          <span className="text-emerald-600">· pass</span>
+          <span className="text-emerald-400">· pass</span>
         )}
         {section.verdict === "FAIL" && (
-          <span className="text-red-600">· fail</span>
+          <span className="text-red-400">· fail</span>
         )}
       </header>
       <div className="font-sans text-[15px] text-parch leading-[1.7] whitespace-pre-wrap break-words">
@@ -333,9 +332,9 @@ function VerdictPill({
 }) {
   const colorClass =
     verdict === "PASS"
-      ? "border-emerald-600/40 text-emerald-700"
+      ? "border-emerald-500/40 text-emerald-400"
       : verdict === "FAIL"
-        ? "border-red-600/40 text-red-700"
+        ? "border-red-500/40 text-red-400"
         : verdict === "INTERRUPTED"
           ? "border-gold-2/50 text-gold-2"
           : "border-rule text-parch-2"
